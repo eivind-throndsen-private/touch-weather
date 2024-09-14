@@ -9,7 +9,6 @@ This is a hobbyist project to display the upcoming weather forecast on a Logitec
 - Outputs a 480 x 272 PNG image optimized for the Squeezebox Touch screen.
 - Runs inside a Docker container for easy deployment.
 - Configurable parameters via a `config.json` file.
-- Debug mode to assist with cropping adjustments.
 
 ## Getting Started
 
