@@ -1,6 +1,6 @@
 # Touch Weather Meteogram
 
-This is a hobbyist project to display the upcoming weather forecast on a Logitech Squeezebox Touch. The script periodically downloads a meteogram SVG from [yr.no](https://www.yr.no/) and processes it into a PNG image suitable for display on the device.
+This is a hobbyist project to display the upcoming weather forecast on a Logitech Squeezebox Touch. The script periodically downloads a meteogram SVG from [yr.no](https://www.yr.no/) and processes it into a PNG image suitable for display on the Squeezebox Touch. It should be possible to adapt this approach to generate weather forecast excerpts files for display on screen savers, boards etc. Please be gentle on the yr.no servers, it is a great publicly funded resource with no ad funding. This script fetches the SVG once every hour at night and once every 15 minutes during the day.
 
 ## Features
 
@@ -17,6 +17,7 @@ This is a hobbyist project to display the upcoming weather forecast on a Logitec
 
 - Docker installed on your system.
 - Optionally, `git` for cloning the repository.
+- I am running this inside Container Manager on a Synology NAS. Not tested anywhere else. YMMV.
 
 ### Installation
 
@@ -39,9 +40,9 @@ This is a hobbyist project to display the upcoming weather forecast on a Logitec
 
 Edit the `config.json` file to customize:
 
-- `svg_url`: The URL to the meteogram SVG from yr.no.
+- `svg_url`: The URL to the meteogram SVG from yr.no. You can usually find the SVG link on the regular weather forecast page on yr.no. 
 - `image_height`: Height of the image during conversion.
-- `crop_area`: The area of the image to crop `[x, y, width, height]`.
+- `crop_area`: The area of the image to crop `[x, y, width, height]`. Relative to image_height. 
 
 ### Running the Container
 
@@ -52,15 +53,4 @@ make run
 ```
 
 This command mounts the `output` directory so you can access the generated image on your host machine.
-
-### Debug Mode
-
-To run the script in debug mode and draw a red rectangle on the image, pass four parameters representing the rectangle's position and size:
-
-```bash
-./run.sh 50 50 100 100
-```
-
-- `50 50`: Starting x and y coordinates from the lower-left corner.
-- `100 100`: Width and height of the rectangle.
 
