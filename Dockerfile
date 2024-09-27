@@ -1,25 +1,44 @@
-FROM python:3.9-slim
+# Use Alpine-based Python image with a specific version for better reproducibility
+FROM python:3.10-alpine3.18
 
-# Install system dependencies
-RUN apt-get update && \
-    apt-get install -y \
-        librsvg2-bin \
-        wget \
-        python3 \
-        python3-pip
+# Set timezone
+ENV TZ=Europe/Amsterdam
+RUN apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone && \
+    apk del tzdata
 
-# Install Python dependencies
-RUN pip install --no-cache-dir \
-    pillow \
-    pyyaml \
-    wget
+# install fonts
+RUN apk add --no-cache \
+    fontconfig \
+    ttf-dejavu \
+    && apk add --no-cache librsvg
 
-# Copy the application files
-COPY run.sh meteogram.py svg_color_transform.py color_transform_config.yaml config.json /app/
+# Create the fonts directory if it doesn't exist
+RUN mkdir -p /usr/share/fonts/TTF
+
+# Copy your custom font files into the image
+COPY NRKSans_Variable.ttf /usr/share/fonts/TTF/
+COPY NRKSans_Variable_Italic.ttf /usr/share/fonts/TTF/
+
+# Refresh the font cache
+RUN fc-cache -f -v
+
+# Install system dependencies and Python packages
+RUN apk add --no-cache bash rsvg-convert jpeg-dev zlib-dev freetype-dev lcms2-dev openjpeg-dev tiff-dev tk-dev tcl-dev harfbuzz-dev fribidi-dev librsvg && \
+    apk add --no-cache --virtual .build-deps build-base && \
+    pip install --no-cache-dir Pillow==9.5.0 pyyaml wget && \
+    apk del .build-deps && \
+    rm -rf /var/cache/apk/* /root/.cache
+
+# Set working directory
 WORKDIR /app
 
-# Make run.sh executable
-RUN chmod +x run.sh
+# Copy application files to working directory
+COPY run.sh meteogram.py svg_color_transform.py color_transform_config.yaml config.json NRKSans_Variable.ttf NRKSans_Variable_Italic.ttf /app/
 
-# Set the entrypoint
+# Make run.sh executable
+RUN chmod +x /app/run.sh
+
+# Set the entrypoint to run.sh
 CMD ["./run.sh"]

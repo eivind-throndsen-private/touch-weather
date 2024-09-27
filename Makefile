@@ -11,7 +11,7 @@ build:
 	docker build --platform linux/amd64 -t $(IMAGE_NAME):$(TAG) .
 
 # Run the container
-run:
+run: clean
 	docker run --name $(IMAGE_NAME) -v $(PWD)/output:/app/output $(IMAGE_NAME):$(TAG)
 
 # Save the docker image to a tar file
@@ -28,7 +28,9 @@ push:
 
 # Clean up dangling images
 clean:
+	-docker rm -f touch-weather || true
 	docker image prune -f
+	-clean-tar:
 
 # Remove the generated tar file
 clean-tar:
