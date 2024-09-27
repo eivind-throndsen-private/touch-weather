@@ -1,6 +1,6 @@
 # Touch Weather Meteogram
 
-This is a hobbyist project to display the upcoming weather forecast on a Logitech Squeezebox Touch. The script periodically downloads a meteogram SVG from [yr.no](https://www.yr.no/) and processes it into a PNG image suitable for display on the Squeezebox Touch. It should be possible to adapt this approach to generate weather forecast excerpts files for display on screen savers, boards etc. Please be gentle on the yr.no servers, it is a great publicly funded resource with no ad funding. This script fetches the SVG once every hour at night and once every 15 minutes during the day.
+This is a hobbyist project to display the upcoming weather forecast on a Logitech Squeezebox Touch. The script periodically downloads a meteogram (a infographic that shows the weather fore cast) from [yr.no](https://www.yr.no/) and processes it into a PNG image suitable for display on the Squeezebox Touch. It should be possible to adapt this approach to generate weather forecast excerpts files for display on screen savers, boards etc. Please be gentle on the yr.no servers, it is a great publicly funded resource with no ad funding. This script currently fetches the forecast once every hour.
 
 ## Features
 
@@ -8,7 +8,7 @@ This is a hobbyist project to display the upcoming weather forecast on a Logitec
 - Converts the SVG to PNG and crops it to display the next 24 hours.
 - Outputs a 480 x 272 PNG image optimized for the Squeezebox Touch screen.
 - Runs inside a Docker container for easy deployment.
-- Configurable parameters via a `config.json` file.
+- Configurable via the `config.json` file.
 
 ## Getting Started
 
