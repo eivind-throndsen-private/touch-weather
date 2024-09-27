@@ -3,8 +3,9 @@
 import os
 import sys
 import time
-import wget
 import json
+import argparse
+import wget
 from PIL import Image, ImageDraw
 
 def load_config(config_file='config.json'):
@@ -20,7 +21,7 @@ def download_svg(url, output_dir):
     return filename
 
 def convert_svg_to_png(svg_file, png_file, height):
-    print("Converting SVG to PNG")
+    print("\nConverting SVG to PNG")
     os.system(f"rsvg-convert -h {height} {svg_file} -o {png_file}")
 
 def crop_image(input_file, output_file, crop_area):
@@ -40,7 +41,17 @@ def draw_debug_rectangle(image_file, rectangle):
         img.save(image_file)
         print(f"Drew rectangle on {image_file}")
 
+def transform_svg_to_dark(svg_file, config_file='color_transform_config.yaml'):
+    print("Transforming SVG to dark mode")
+    os.system(f"python3 svg_color_transform.py {svg_file} {config_file} {svg_file}")
+
 def main():
+    parser = argparse.ArgumentParser(description='Generate meteogram images.')
+    parser.add_argument('--night-mode', action='store_true', help='Force night mode for testing.')
+    parser.add_argument('--debug', nargs=4, metavar=('X', 'Y', 'Width', 'Height'),
+                        type=int, help='Debug mode with rectangle coordinates.')
+    args = parser.parse_args()
+
     config = load_config()
     output_dir = './output'
     os.makedirs(output_dir, exist_ok=True)
@@ -50,18 +61,28 @@ def main():
     crop_area = config.get('crop_area', [5, 128, 480, 272])
 
     debug = False
-    if len(sys.argv) == 5:
+    if args.debug:
         debug = True
-        rectangle = tuple(map(int, sys.argv[1:5]))
+        rectangle = tuple(args.debug)
 
     while True:
-        current_hour = time.localtime().tm_hour
-        if 7 <= current_hour < 23:
-            sleep_duration = 900  # 15 minutes
+        if args.night_mode:
+            is_dark_mode = True
+            sleep_duration = 900  # For testing
         else:
-            sleep_duration = 3600  # 1 hour
+            current_hour = time.localtime().tm_hour
+            if 7 <= current_hour < 23:
+                sleep_duration = 900  # 15 minutes
+                is_dark_mode = False
+            else:
+                sleep_duration = 3600  # 1 hour
+                is_dark_mode = True
 
         svg_file = download_svg(svg_url, output_dir)
+
+        if is_dark_mode:
+            transform_svg_to_dark(svg_file)
+
         raw_png = os.path.join(output_dir, 'meteogram-raw.png')
         convert_svg_to_png(svg_file, raw_png, image_height)
         

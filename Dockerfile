@@ -1,30 +1,25 @@
-# Use a lightweight Python image
 FROM python:3.9-slim
 
-# Install required packages
+# Install system dependencies
 RUN apt-get update && \
-    apt-get install -y wget librsvg2-bin imagemagick && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set the working directory in the container
-WORKDIR /app
+    apt-get install -y \
+        librsvg2-bin \
+        wget \
+        python3 \
+        python3-pip
 
 # Install Python dependencies
-RUN pip install pillow wget
+RUN pip install --no-cache-dir \
+    pillow \
+    pyyaml \
+    wget
 
-# Copy the necessary files into the container
-COPY meteogram.py .
-COPY run.sh .
-COPY config.json .
+# Copy the application files
+COPY run.sh meteogram.py svg_color_transform.py color_transform_config.yaml config.json /app/
+WORKDIR /app
 
-# Make scripts executable
-RUN chmod +x run.sh meteogram.py
+# Make run.sh executable
+RUN chmod +x run.sh
 
-# Create output directory
-RUN mkdir -p /app/output
-
-# Expose the output directory as a volume
-VOLUME ["/app/output"]
-
-# Run the script when the container launches
+# Set the entrypoint
 CMD ["./run.sh"]

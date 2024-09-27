@@ -1,0 +1,17 @@
+# color_transform_config.yaml
+
+# Define color transformations as key-value pairs
+# Keys are the original colors to be replaced
+# Values are the new colors to replace them with
+
+color_transformations:
+  "#ffffff": "#000000"    # Background from white to black
+  "#c3d0d8": "#4f5b66"    # Grid lines from light gray to dark gray
+  "#21292b": "#ced8de"    # Primary text from dark to light
+  "#56616c": "#9aa5b0"    # Secondary text from dark gray to lighter gray
+  "#00b9f1": "#00b9f1"    # Logo color remains the same
+  "#006edb": "#5dade2"    # Blue lines adjusted for visibility
+  "#aa00f2": "#ff79c6"    # Purple lines adjusted for visibility
+  "#c60000": "#ff5555"    # Red lines adjusted for visibility
+  # Add more color transformations as needed
+
