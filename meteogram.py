@@ -57,8 +57,8 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
     
     svg_url = config.get('svg_url')
-    image_height = config.get('image_height', 600)
-    crop_area = config.get('crop_area', [5, 128, 480, 272])
+    image_height = config.get('image_height', 1200)
+    crop_area = config.get('crop_area', [10, 256, 960, 544])
 
     debug = False
     if args.debug:
