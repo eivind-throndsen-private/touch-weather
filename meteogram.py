@@ -41,9 +41,9 @@ def draw_debug_rectangle(image_file, rectangle):
         img.save(image_file)
         print(f"Drew rectangle on {image_file}")
 
-def transform_svg_to_dark(svg_file, config_file='color_transform_config.yaml'):
-    print("Transforming SVG to dark mode")
-    os.system(f"python3 svg_color_transform.py {svg_file} {config_file} {svg_file}")
+#def transform_svg_to_dark(svg_file, config_file='color_transform_config.yaml'):
+#    print("Transforming SVG to dark mode")
+#    os.system(f"python3 svg_color_transform.py {svg_file} {config_file} {svg_file}")
 
 def main():
     parser = argparse.ArgumentParser(description='Generate meteogram images.')
@@ -65,23 +65,29 @@ def main():
         debug = True
         rectangle = tuple(args.debug)
 
-    while True:
+    keep_running = True
+    
+    while keep_running:
         if args.night_mode:
             is_dark_mode = True
-            sleep_duration = 900  # For testing
         else:
             current_hour = time.localtime().tm_hour
             if 7 <= current_hour < 23:
-                sleep_duration = 900  # 15 minutes
                 is_dark_mode = False
             else:
-                sleep_duration = 3600  # 1 hour
                 is_dark_mode = True
 
-        svg_file = download_svg(svg_url, output_dir)
+        sleep_duration = 3600  # sleep for 1 hour between each invocation
+
+        final_svg_url = svg_url  # Store the original URL in a temporary variable
 
         if is_dark_mode:
-            transform_svg_to_dark(svg_file)
+            final_svg_url += "?mode=dark"
+
+        svg_file = download_svg(final_svg_url, output_dir)
+
+        #if is_dark_mode:
+        #    transform_svg_to_dark(svg_file)
 
         raw_png = os.path.join(output_dir, 'meteogram-raw.png')
         convert_svg_to_png(svg_file, raw_png, image_height)
@@ -93,8 +99,9 @@ def main():
 
         if debug:
             draw_debug_rectangle(meteogram_png, rectangle)
-
-        time.sleep(sleep_duration)
+            keep_running = False
+        else:
+            time.sleep(sleep_duration)
 
 if __name__ == "__main__":
     main()
