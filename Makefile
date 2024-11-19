@@ -12,7 +12,7 @@ build:
 
 # Run the container
 run: clean
-	docker run --name $(IMAGE_NAME) -v $(PWD)/output:/app/output $(IMAGE_NAME):$(TAG)
+	docker run --name $(IMAGE_NAME) -it -v $(PWD)/output:/app/output $(IMAGE_NAME):$(TAG)
 
 # Save the docker image to a tar file
 save:
@@ -30,7 +30,7 @@ push:
 clean:
 	-docker rm -f touch-weather || true
 	docker image prune -f
-	-clean-tar:
+	$(MAKE) clean-tar
 
 # Remove the generated tar file
 clean-tar:
