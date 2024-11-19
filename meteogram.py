@@ -54,7 +54,7 @@ def draw_debug_rectangle(image_file, rectangle):
         img.save(image_file)
         print(f"Drew rectangle on {image_file}")
 
-def optimize_meteogram(input_file, quality=(50, 85), colors=16):
+def optimize_meteogram(input_file, quality=(50, 85), colors=64):
     try:
         initial_size = get_file_size_kb(input_file)
         print_flush(f"\nStarting optimization. Initial size: {initial_size:.1f}KB")
@@ -66,7 +66,7 @@ def optimize_meteogram(input_file, quality=(50, 85), colors=16):
         
         quantized = imagequant.quantize_pil_image(
             input_image,
-            dithering_level=0.5,
+            dithering_level=0.8,
             max_colors=colors,
             min_quality=quality[0],
             max_quality=quality[1]
