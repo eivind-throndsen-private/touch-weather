@@ -1,10 +1,12 @@
 # Touch Weather Meteogram
 
-This is a hobbyist project to display the upcoming weather forecast on a Logitech Squeezebox Touch. The script periodically downloads a meteogram (a infographic that shows the weather fore cast) from [yr.no](https://www.yr.no/) and processes it into a PNG image suitable for display on the Squeezebox Touch. It should be possible to adapt this approach to generate weather forecast excerpts files for display on screen savers, boards etc. Please be gentle on the yr.no servers, it is a great publicly funded resource with no ad funding. This script currently fetches the forecast once every hour.
+This is a hobbyist project to display the upcoming weather forecast on a Logitech Squeezebox Touch. The meteogram.py script periodically downloads a meteogram (a infographic that shows the weather forecast) from [yr.no](https://www.yr.no/) and processes it into a PNG image suitable for display on the Squeezebox Touch. 
+
+It should be possible to adapt this approach to generate weather forecast excerpts files for display on screen savers, boards etc. 
 
 ## Features
 
-- Downloads weather forecast SVG for your location.
+- Downloads weather forecast SVG for your location (location for the SVG URL is configurable).
 - Converts the SVG to PNG and crops it to display the next 24 hours.
 - Outputs a 480 x 272 PNG image optimized for the Squeezebox Touch screen.
 - Runs inside a Docker container for easy deployment.
@@ -39,17 +41,20 @@ This is a hobbyist project to display the upcoming weather forecast on a Logitec
 
 Edit the `config.json` file to customize:
 
-- `svg_url`: The URL to the meteogram SVG from yr.no. You can usually find the SVG link on the regular weather forecast page on yr.no. 
+- `svg_url`: The URL to the meteogram SVG from yr.no. You can find the SVG link on the regular weather forecast page on yr.no. 
 - `image_height`: Height of the image during conversion.
 - `crop_area`: The area of the image to crop `[x, y, width, height]`. Relative to image_height. 
 
 ### Running the Container
 
-To run the container:
+To run the container locally:
 
 ```bash
 make run
 ```
 
 This command mounts the `output` directory so you can access the generated image on your host machine.
+
+To run the container on your Synology NAS you will need to generate the Docker image, upload it to the Synology Container Manager, and configure a container using the image. The generated meteogram images can then be loaded by the screensaver on your Squeezebox Touch.  
+
 
