@@ -15,7 +15,9 @@ run: clean
 	docker run --name $(IMAGE_NAME) -it -v $(PWD)/output:/app/output $(IMAGE_NAME):$(TAG)
 
 # Save the docker image to a tar file
-save:
+save: build $(TAR_NAME)
+
+$(TAR_NAME): build
 	docker save $(IMAGE_NAME):$(TAG) > $(TAR_NAME)
 
 # Load the docker image from a tar file
